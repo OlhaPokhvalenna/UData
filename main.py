@@ -1,52 +1,69 @@
-from determinant import determinant
-from importFile import readFile
-from inverseMatrix import inverseMatrix
-from matrixMatrixMultiple import matrixMatrix
-from numberMatrixMultiple import numberMatrix
-import numpy as np
+from gauss_inverse import *
+from import_file import*
+from inverse_matrix import *
+from matrix_matrix_multiple import *
+from number_matrix_multiple import *
+from output import *
 
-#OutputMatrix
-def printMatrix(matrix):
-    print("\nMatrix:")
-    for i in range(len(matrix)):
-        print(np.round(matrix[i],3))
+
 def menu():
     while True:
-        select=int(input("Select operation:\n1:determinant\n2:inverse matrix\n3:number*matrix\n4:matrix*matrix\nany other point: exit\n"))
+        print("Select operation:",
+              "1:Determinant",
+              "2:Inverse matrix (Gauss-Jordan method)",
+              "3:Inverse matrix (Cofactors method)",
+              "4:Multiple number and matrix",
+              "5:Multiple matrixes",
+              sep='\n')
+        select = int(input())
         while True:
-            path = input("Enter the way to file with matrix:")
-            try: mtr = readFile(path)
-            except Exception: print("Invalid File, try again\n")
+            path = input("Enter the way to the file with matrix:")
+            try:
+                mtr = read_file(path)
+            except IOError:
+                print("Invalid File, try again\n")
             else:
-                printMatrix(mtr)
                 if select == 1:
-                    print("Determinant:")
-                    print(determinant(mtr))
+                    print("\nDeterminant:")
+                    print(determinant(mtr), end='\n')
                     break
-                elif select==2:
-                    print("Inverse matrix:")
-                    printMatrix(inverseMatrix(mtr))
+                elif select == 2:
+                    print("\nInverse matrix (Gauss-Jordan method):")
+                    try:
+                        print_matrix(gauss_inverse(mtr))
+                        path = input("Enter name of file where matrix will be written:")
+                        write_matrix(gauss_inverse(mtr), path)
+                    except ValueError:
+                        print("Matrix is singular!")
                     break
                 elif select == 3:
-                    num=input("Enter number:")
-                    printMatrix(mtr)
-                    print("Number*Matrix:")
-                    printMatrix(numberMatrix(mtr, num))
+                    print("\nInverse matrix (Cofactors method):")
+                    try:
+                        print_matrix(inverse_matrix(mtr))
+                        path = input("Enter name of file where matrix will be written:")
+                        write_matrix(inverse_matrix(mtr), path)
+                    except ValueError:
+                        print("Matrix is singular!")
                     break
                 elif select == 4:
-                    path2 = input("Enter the way to file with second matrix:")
-                    try:
-                        mtr2 = readFile(path2)
-                    except Exception:
-                        print("Invalid File, try again\n")
-                    else:
-                        mtr2 = readFile(path2)
-                        print("Matrix*Matrix:")
-                        printMatrix(matrixMatrix(mtr, mtr2))
+                    num = float(input("\nEnter number:"))
+                    print("Number*Matrix:")
+                    print_matrix(multiple_number_and_matrix(mtr, num))
+                    path = input("Enter name of file where matrix will be written:")
+                    write_matrix(multiple_number_and_matrix(mtr, num), path)
                     break
-
-        else:
-            break
+                elif select == 5:
+                    path2 = input("Enter the way to the file with second matrix:")
+                    try:
+                        mtr2 = read_file(path2)
+                    except IOError:
+                        print("\nInvalid File, try again\n")
+                    else:
+                        print("\nMatrix*Matrix:")
+                        print_matrix(multiple_matrixes(mtr, mtr2))
+                        path = input("Enter name of file where matrix will be written:")
+                        write_matrix(multiple_matrixes(mtr, mtr2), path)
+                    break
 
 
 menu()
