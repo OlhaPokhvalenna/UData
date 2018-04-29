@@ -17,33 +17,24 @@ def menu():
               sep='\n')
         select = int(input())
         while True:
-            path = input("Enter the way to the file with matrix:")
             try:
+                path = input("Enter the way to the file with matrix:")
                 mtr = read_file(path)
-            except IOError:
-                print("Invalid File, try again\n")
-            else:
                 if select == 1:
                     print("\nDeterminant:")
                     print(determinant(mtr), end='\n')
                     break
                 elif select == 2:
                     print("\nInverse matrix (Gauss-Jordan method):")
-                    try:
-                        print_matrix(gauss_inverse(mtr))
-                        path = input("Enter name of file where matrix will be written:")
-                        write_matrix(gauss_inverse(mtr), path)
-                    except ValueError:
-                        print("Matrix is singular!")
+                    print_matrix(gauss_inverse(mtr))
+                    path = input("Enter name of file where matrix will be written:")
+                    write_matrix(gauss_inverse(mtr), path)
                     break
                 elif select == 3:
                     print("\nInverse matrix (Cofactors method):")
-                    try:
-                        print_matrix(inverse_matrix(mtr))
-                        path = input("Enter name of file where matrix will be written:")
-                        write_matrix(inverse_matrix(mtr), path)
-                    except ValueError:
-                        print("Matrix is singular!")
+                    print_matrix(inverse_matrix(mtr))
+                    path = input("Enter name of file where matrix will be written:")
+                    write_matrix(inverse_matrix(mtr), path)
                     break
                 elif select == 4:
                     num = float(input("\nEnter number:"))
@@ -54,16 +45,15 @@ def menu():
                     break
                 elif select == 5:
                     path2 = input("Enter the way to the file with second matrix:")
-                    try:
-                        mtr2 = read_file(path2)
-                    except IOError:
-                        print("\nInvalid File, try again\n")
-                    else:
-                        print("\nMatrix*Matrix:")
-                        print_matrix(multiple_matrixes(mtr, mtr2))
-                        path = input("Enter name of file where matrix will be written:")
-                        write_matrix(multiple_matrixes(mtr, mtr2), path)
+                    mtr2 = read_file(path2)
+                    print("\nMatrix*Matrix:")
+                    print_matrix(multiple_matrixes(mtr, mtr2))
+                    path = input("Enter name of file where matrix will be written:")
+                    write_matrix(multiple_matrixes(mtr, mtr2), path)
                     break
+            except Exception as e:
+                print(e.args[-1])
+                print("Try again!")
 
 
 menu()
